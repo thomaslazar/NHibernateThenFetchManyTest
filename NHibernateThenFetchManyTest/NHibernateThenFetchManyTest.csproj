@@ -58,14 +58,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Employee.cs" />
-    <Compile Include="Entities\Product.cs" />
-    <Compile Include="Mappings\EmployeeMap.cs" />
-    <Compile Include="Mappings\ProductMap.cs" />
-    <Compile Include="Mappings\StoreMap.cs" />
+    <Compile Include="Entities\MaintenanceJob.cs" />
+    <Compile Include="Entities\Component.cs" />
+    <Compile Include="Mappings\MaintenanceJobMap.cs" />
+    <Compile Include="Mappings\ComponentMap.cs" />
+    <Compile Include="Mappings\MaintenanceObjectMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Entities\Store.cs" />
+    <Compile Include="Entities\MaintenanceObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

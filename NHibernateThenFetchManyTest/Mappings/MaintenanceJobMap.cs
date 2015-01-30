@@ -8,14 +8,14 @@ using NHibernateThenFetchManyTest.Entities;
 
 namespace NHibernateThenFetchManyTest.Mappings
 {
-    public class EmployeeMap : ClassMap<Employee>
+    public class MaintenanceJobMap : ClassMap<MaintenanceJob>
     {
-        public EmployeeMap()
+        public MaintenanceJobMap()
         {
             Id(x => x.Id);
-            Map(x => x.FirstName);
-            Map(x => x.LastName);
-            References(x => x.Store);
+            Map(x => x.JobNumber);
+            Map(x => x.JobInfo);
+            References(x => x.MaintenanceObject);
         }
     }
 }

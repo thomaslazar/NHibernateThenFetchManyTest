@@ -26,36 +26,36 @@ namespace NHibernateThenFetchManyTest
             {
                 using (var transaction = session.BeginTransaction())
                 {
-                    // create a couple of Stores each with some Products and Employees
-                    var barginBasin = new Store {Name = "Bargin Basin"};
-                    var superMart = new Store {Name = "SuperMart"};
+                    // create a couple of Stores each with some Components and Employees
+                    var bigMachine = new MaintenanceObject {Name = "Great big Machine"};
+                    var smallMachine = new MaintenanceObject {Name = "Smaller Machine"};
 
-                    var potatoes = new Product {Name = "Potatoes", Price = 3.60};
-                    var fish = new Product {Name = "Fish", Price = 4.49};
-                    var milk = new Product {Name = "Milk", Price = 0.79};
-                    var bread = new Product {Name = "Bread", Price = 1.29};
-                    var cheese = new Product {Name = "Cheese", Price = 2.10};
-                    var waffles = new Product {Name = "Waffles", Price = 2.41};
+                    var cog = new Component {Name = "cog", Price = 3.60};
+                    var screw = new Component {Name = "screw", Price = 4.49};
+                    var torque = new Component {Name = "torque", Price = 0.79};
+                    var couplings = new Component {Name = "couplings", Price = 1.29};
+                    var hinge = new Component {Name = "hinge", Price = 2.10};
+                    var toggle = new Component {Name = "toggle", Price = 2.41};
 
-                    var daisy = new Employee {FirstName = "Daisy", LastName = "Harrison"};
-                    var jack = new Employee {FirstName = "Jack", LastName = "Torrance"};
-                    var sue = new Employee {FirstName = "Sue", LastName = "Walkters"};
-                    var bill = new Employee {FirstName = "Bill", LastName = "Taft"};
-                    var joan = new Employee {FirstName = "Joan", LastName = "Pope"};
+                    var job1 = new MaintenanceJob {JobNumber = "#1", JobInfo = "Harrison"};
+                    var job2 = new MaintenanceJob {JobNumber = "#2", JobInfo = "Torrance"};
+                    var job3 = new MaintenanceJob {JobNumber = "#3", JobInfo = "Walkters"};
+                    var job4 = new MaintenanceJob {JobNumber = "#4", JobInfo = "Taft"};
+                    var job5 = new MaintenanceJob {JobNumber = "#5", JobInfo = "Pope"};
 
-                    // add products to the stores, there's some crossover in the products in each
-                    // store, because the store-product relationship is many-to-many
-                    AddProductsToStore(barginBasin, potatoes, fish, milk, bread, cheese);
-                    AddProductsToStore(superMart, bread, cheese, waffles);
+                    // add componentses to the stores, there's some crossover in the componentses in each
+                    // MaintenanceObject, because the MaintenanceObject-Component relationship is many-to-many
+                    AddComponentsToMaintenanceObject(bigMachine, cog, screw, torque, couplings, hinge);
+                    AddComponentsToMaintenanceObject(smallMachine, couplings, hinge, toggle);
 
-                    // add employees to the stores, this relationship is a one-to-many, so one
-                    // employee can only work at one store at a time
-                    AddEmployeesToStore(barginBasin, daisy, jack, sue);
-                    AddEmployeesToStore(superMart, bill, joan);
+                    // add maintenanceJobs to the stores, this relationship is a one-to-many, so one
+                    // MaintenanceJob can only work at one MaintenanceObject at a time
+                    AddMaintenanceJobsToMaintenanceObject(bigMachine, job1, job2, job3);
+                    AddMaintenanceJobsToMaintenanceObject(smallMachine, job4, job5);
 
                     // save both stores, this saves everything else via cascading
-                    session.SaveOrUpdate(barginBasin);
-                    session.SaveOrUpdate(superMart);
+                    session.SaveOrUpdate(bigMachine);
+                    session.SaveOrUpdate(smallMachine);
 
                     transaction.Commit();
                 }
@@ -63,15 +63,15 @@ namespace NHibernateThenFetchManyTest
                 // retreive all stores and display them
                 using (session.BeginTransaction())
                 {
-                    //var stores = session.CreateCriteria(typeof (Store))
-                    //    .List<Store>();
+                    //var stores = session.CreateCriteria(typeof (MaintenanceObject))
+                    //    .List<MaintenanceObject>();
 
-                    //foreach (var store in stores)
+                    //foreach (var MaintenanceObject in stores)
                     //{
-                    //    WriteStorePretty(store);
+                    //    WriteStorePretty(MaintenanceObject);
                     //}
 
-                    var employees = session.Query<Employee>().Fetch(x => x.Store).ThenFetchMany(x => x.Products).ToList();
+                    var jobs = session.Query<MaintenanceJob>().Fetch(x => x.MaintenanceObject).ThenFetchMany(x => x.Components).ToList();
 
                 }
 
@@ -79,39 +79,39 @@ namespace NHibernateThenFetchManyTest
             }
         }
 
-        private static void WriteStorePretty(Store store)
+        private static void WriteStorePretty(MaintenanceObject maintenanceObject)
         {
-            Console.WriteLine(store.Name);
-            Console.WriteLine("  Products:");
+            Console.WriteLine(maintenanceObject.Name);
+            Console.WriteLine("  Components:");
 
-            foreach (var product in store.Products)
+            foreach (var product in maintenanceObject.Components)
             {
                 Console.WriteLine("    " + product.Name);
             }
 
-            Console.WriteLine("  Staff:");
+            Console.WriteLine("  Jobs:");
 
-            foreach (var employee in store.Staff)
+            foreach (var employee in maintenanceObject.Jobs)
             {
-                Console.WriteLine("    " + employee.FirstName + " " + employee.LastName);
+                Console.WriteLine("    " + employee.JobNumber + " " + employee.JobInfo);
             }
 
             Console.WriteLine();
         }
 
-        public static void AddProductsToStore(Store store, params Product[] products)
+        public static void AddComponentsToMaintenanceObject(MaintenanceObject maintenanceObject, params Component[] componentses)
         {
-            foreach (var product in products)
+            foreach (var product in componentses)
             {
-                store.AddProduct(product);
+                maintenanceObject.AddProduct(product);
             }
         }
 
-        public static void AddEmployeesToStore(Store store, params Employee[] employees)
+        public static void AddMaintenanceJobsToMaintenanceObject(MaintenanceObject maintenanceObject, params MaintenanceJob[] maintenanceJobs)
         {
-            foreach (var employee in employees)
+            foreach (var employee in maintenanceJobs)
             {
-                store.AddEmployee(employee);
+                maintenanceObject.AddEmployee(employee);
             }
         }
 

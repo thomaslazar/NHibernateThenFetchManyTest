@@ -8,18 +8,18 @@ using NHibernateThenFetchManyTest.Entities;
 
 namespace NHibernateThenFetchManyTest.Mappings
 {
-    public class StoreMap : ClassMap<Store>
+    public class MaintenanceObjectMap : ClassMap<MaintenanceObject>
     {
-        public StoreMap()
+        public MaintenanceObjectMap()
         {
             Id(x => x.Id);
             Map(x => x.Name);
-            HasMany(x => x.Staff)
-              .Inverse()
-              .Cascade.All();
-            HasManyToMany(x => x.Products)
-             .Cascade.All()
-             .Table("StoreProduct");
+            HasMany(x => x.Jobs)
+                .Inverse()
+                .Cascade.All();
+            HasMany(x => x.Components)
+                .Inverse()
+                .Cascade.All();
         }
     }
 }
